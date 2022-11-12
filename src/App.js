@@ -1,45 +1,50 @@
-import { useState } from "react";
-
-const defaultFormData = {
-  title: "",
-  body: "",
-};
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 export default function App() {
-  const [formData, setFormData] = useState(defaultFormData);
-  const { title, body } = formData;
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
-  const onChange = (e) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      [e.target.id]: e.target.value,
-    }));
-  };
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        setLoading(true);
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
-    setFormData(defaultFormData);
-  };
+        const response = await axios.get(
+          "https://jsonplaceholder.typicode.com/posts"
+        );
+
+        setData(response.data);
+        setLoading(false);
+        setError(false);
+      } catch (error) {
+        setError(true);
+        setLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, []);
 
   return (
     <>
-      <h1>Form</h1>
-      <p>Create a post</p>
+      { loading && "Loading..." }
 
-      <form onSubmit={ onSubmit }>
-        <label htmlFor="title">Title</label>
-        <br />
-        <input type="text" id="title" value={ title } onChange={ onChange } />
-        <br />
-        <br />
-        <label htmlFor="body">Body</label>
-        <br />
-        <input type="text" id="body" value={ body } onChange={ onChange } />
-        <br />
-        <br />
-        <button type="submit">Upload post</button>
-      </form>
+      { error && "Oops, could not fetch posts, please try again later" }
+
+      { data &&
+        data.map((post) => {
+          const { id, title, body } = post;
+
+          return (
+            <article key={ id }>
+              <p>{ title }</p>
+              <p>{ id }</p>
+              <p>{ body }</p>
+            </article>
+          );
+        }) }
     </>
   );
 }
