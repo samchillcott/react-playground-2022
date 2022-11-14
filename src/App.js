@@ -1,50 +1,51 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+
+const defaultFormData = {
+  title: "",
+  body: "",
+  userId: 1,
+};
 
 export default function App() {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const [formData, setFormData] = useState(defaultFormData);
+  const { title, body } = formData;
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        setLoading(true);
+  const onChange = (e) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [e.target.id]: e.target.value,
+    }));
+  };
 
-        const response = await axios.get(
-          "https://jsonplaceholder.typicode.com/posts"
-        );
-
-        setData(response.data);
-        setLoading(false);
-        setError(false);
-      } catch (error) {
-        setError(true);
-        setLoading(false);
-      }
-    };
-
-    fetchPosts();
-  }, []);
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("https://jsonplaceholder.typicode.com/posts", formData)
+      console.log(response);
+    } catch (error) { }
+    // console.log(formData);
+    setFormData(defaultFormData);
+  };
 
   return (
     <>
-      { loading && "Loading..." }
+      <h1>Form</h1>
+      <p>Create a post</p>
 
-      { error && "Oops, could not fetch posts, please try again later" }
-
-      { data &&
-        data.map((post) => {
-          const { id, title, body } = post;
-
-          return (
-            <article key={ id }>
-              <p>{ title }</p>
-              <p>{ id }</p>
-              <p>{ body }</p>
-            </article>
-          );
-        }) }
+      <form onSubmit={ onSubmit }>
+        <label htmlFor="title">Title</label>
+        <br />
+        <input type="text" id="title" value={ title } onChange={ onChange } />
+        <br />
+        <br />
+        <label htmlFor="body">Body</label>
+        <br />
+        <input type="text" id="body" value={ body } onChange={ onChange } />
+        <br />
+        <br />
+        <button type="submit">Upload post</button>
+      </form>
     </>
   );
 }
