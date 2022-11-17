@@ -9,6 +9,8 @@ const defaultFormData = {
 
 export default function App() {
   const [formData, setFormData] = useState(defaultFormData);
+  const [success, setSuccess] = useState(false)
+  const [error, setError] = useState(false)
   const { title, body } = formData;
 
   const onChange = (e) => {
@@ -21,10 +23,13 @@ export default function App() {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("https://jsonplaceholder.typicode.com/posts", formData)
-      console.log(response);
-    } catch (error) { }
-    // console.log(formData);
+      await axios.post("https://jsonplaceholder.typicode.com/posts/", formData)
+      setSuccess(true)
+      setError(false)
+    } catch (error) {
+      setSuccess(false)
+      setError(true)
+    }
     setFormData(defaultFormData);
   };
 
@@ -46,6 +51,9 @@ export default function App() {
         <br />
         <button type="submit">Upload post</button>
       </form>
+      { error && <p>Oops, could not upload post</p> }
+      { success && <p>Post upload has succeeded</p> }
     </>
+
   );
 }
