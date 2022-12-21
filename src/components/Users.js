@@ -1,7 +1,7 @@
 import React from 'react'
 import useUsers from '../query hooks/useUsers'
 
-const Users = () => {
+const Users = ({ setSelectedUser }) => {
   const users = useUsers()
   return (
     <>
@@ -10,7 +10,7 @@ const Users = () => {
       { users.isSuccess && (
         <ul>
           { users.data.map(user => (
-            <li>{user.name}</li>
+            <li key={ user.id } onClick={ () => setSelectedUser(user.id) }>{ user.name }</li>
           )) }
         </ul>
       ) }

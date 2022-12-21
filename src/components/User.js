@@ -5,7 +5,7 @@ const User = () => {
   const user = useUser(5)
   return (
     <>
-      { user.isLoading && <p>Loading data...</p> }
+      { user.isLoading && <p>Loading user...</p> }
       { user.isSuccess && <p>{ `${user.data.name} - ${user.data.address.street}` }</p>
       }
     </>
