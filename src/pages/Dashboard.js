@@ -8,7 +8,7 @@ const Dashboard = () => {
     <>
       <Users setSelectedUser={ setSelectedUser } />
       <hr />
-      <User />
+      <User selectedUser={ selectedUser }/>
     </>
   )
 }

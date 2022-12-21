@@ -1,13 +1,12 @@
 import React from 'react'
 import useUser from '../query hooks/useUser'
 
-const User = () => {
-  const user = useUser(5)
+const User = ({ selectedUser }) => {
+  const user = useUser(selectedUser)
   return (
     <>
       { user.isLoading && <p>Loading user...</p> }
-      { user.isSuccess && <p>{ `${user.data.name} - ${user.data.address.street}` }</p>
-      }
+      { user.isSuccess && <p>{ `${user.data.name} - ${user.data.address.street}` }</p> }
     </>
   )
 }
